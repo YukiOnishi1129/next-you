@@ -5,9 +5,11 @@ on:
     branches:
       - "main"
       - "develop"
+      - "feat/*"
+      - "feature/*"
     paths:
       - "web/client/**"
-      - ".github/workflows/web_client_pr_check.yml"
+      - ".github/workflows/web-client-pr-check.yml"
 
 jobs:
   client:
@@ -15,34 +17,39 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23.x]
+        node-version: [22.x]
 
     defaults:
       run:
         working-directory: web/client
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v4
+      - name: Use pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-          cache-dependency-path: ./web/client/pnpm-lock.json
+        #   pnpm-version: latest
+        #   cache: 'pnpm'
+        #   cache-dependency-path: ./web/client/pnpm-lock.yaml
 
-      - name: Enable pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
-
-      - name: Install deps
+      - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
+        
       - run: pnpm lint
       - run: pnpm format -- --write=false
 
       # - name: Test
-      #   run: npm run test
+      #   run: pnpm run test
 
       - run: pnpm exec tsc --noEmit
       - run: pnpm build
