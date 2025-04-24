@@ -5,6 +5,8 @@ on:
     branches:
       - "main"
       - "develop"
+      - "feat/*"
+      - "feature/*"
     paths:
       - "web/client/**"
       - ".github/workflows/web_client_pr_check.yml"
