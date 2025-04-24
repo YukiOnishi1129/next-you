@@ -1,8 +1,6 @@
 import type React from "react";
 
-import {
-	Brain,
-} from "lucide-react";
+import { Brain } from "lucide-react";
 
 import { UserNav } from "@/features/auth/components/UserNav";
 import { SideNav } from "@/shared/components/layout/navigation/SideNav";
@@ -17,7 +15,7 @@ export function DashboardShell({ children }: DashboardShellProps) {
 			<header className="sticky top-0 z-40 border-b bg-background">
 				<div className="container flex h-16 items-center justify-between py-4">
 					<div className="flex items-center gap-2">
-					<Brain className="h-6 w-6 text-rose-500" />
+						<Brain className="h-6 w-6 text-rose-500" />
 						<h1 className="text-xl font-bold">NextYou</h1>
 					</div>
 					<div className="flex items-center gap-2">
