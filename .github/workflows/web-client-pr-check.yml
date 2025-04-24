@@ -26,8 +26,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 23
+          node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
+          cache-dependency-path: ./web/client/pnpm-lock.json
 
       - name: Enable pnpm
         run: |
