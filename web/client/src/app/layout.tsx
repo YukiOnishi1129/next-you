@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/features/auth/providers/AuthProvider";
 import { ThemeProvider } from "@/shared/providers/ThemeProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -34,9 +35,10 @@ export default function RootLayout({
 					enableSystem
 					disableTransitionOnChange
 				>
-					<div className="min-h-screen bg-background text-foreground antialiased">
+					<AuthProvider>
 						{children}
-					</div>
+
+					</AuthProvider>
 				</ThemeProvider>
 			</body>
 		</html>
