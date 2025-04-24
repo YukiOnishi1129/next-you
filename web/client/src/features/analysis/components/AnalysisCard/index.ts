@@ -1,1 +1,1 @@
-export * from "./AnalysisCard"
+export * from "./AnalysisCard";

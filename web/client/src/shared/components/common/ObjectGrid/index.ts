@@ -1,1 +1,1 @@
-export * from "./ObjectGrid"
+export * from "./ObjectGrid";

@@ -1,1 +1,1 @@
-export * from "./MindMapVisualization"
+export * from "./MindMapVisualization";
