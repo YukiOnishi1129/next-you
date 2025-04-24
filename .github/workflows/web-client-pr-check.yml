@@ -17,16 +17,18 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [23.x]
 
     defaults:
       run:
         working-directory: web/client
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - uses: actions/setup-node@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
