@@ -30,12 +30,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
-          cache-dependency-path: ./web/client/pnpm-lock.json
-
-      - name: Enable pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@latest --activate
+          cache-dependency-path: ./web/client/pnpm-lock.yml
 
       - name: Install deps
         run: pnpm install --frozen-lockfile
