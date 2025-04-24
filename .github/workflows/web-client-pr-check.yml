@@ -9,7 +9,7 @@ on:
       - "feature/*"
     paths:
       - "web/client/**"
-      - ".github/workflows/web_client_pr_check.yml"
+      - ".github/workflows/web-client-pr-check.yml"
 
 jobs:
   client:
