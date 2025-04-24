@@ -1,0 +1,12 @@
+{
+  "folders": [
+	{
+		"name": "🖥️ Web",
+		"path": "./web/client"
+	},
+	{
+		"name": "🌏 Root",
+		"path": "./"
+	}
+  ],
+}
