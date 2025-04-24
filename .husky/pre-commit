@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# ---- web/client だけ Biome ----
+pnpm --filter "./web/client" lint
+pnpm --filter "./web/client" format -- --write=false
