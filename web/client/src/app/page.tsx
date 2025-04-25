@@ -202,10 +202,7 @@ export default function Home() {
 								</p>
 							</div>
 							<div className="flex flex-col sm:flex-row gap-3">
-								<Button
-									asChild
-									size="lg"
-								>
+								<Button asChild size="lg">
 									<Link href="/register">
 										Sign Up Now
 										<ArrowRight className="ml-2 h-4 w-4" />
