@@ -1,28 +1,20 @@
+import { HelpContactSupport } from "@/features/help/components/HelpContactSupport";
+import { HelpPageLayout } from "@/features/help/components/HelpPageLayout";
+import { HelpRelatedArticles } from "@/features/help/components/HelpRelatedArticles";
+import { HelpStepByStep } from "@/features/help/components/HelpStepByStep";
+import { HelpTip } from "@/features/help/components/HelpTip";
 import { PlainPageShell } from "@/shared/components/layout/shell/PlainPageShell/PlainPageShell";
-import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "Getting Started | Next You Help Center",
-	description:
-		"Learn how to get started with Next You and make the most of your personal growth journey.",
-};
 
 export default function GettingStartedPage() {
 	return (
 		<PlainPageShell>
-			<div className="container max-w-4xl py-10">
-				<Link
-					href="/help"
-					className="mb-6 flex items-center text-sm text-muted-foreground hover:text-primary"
-				>
-					<ArrowLeft className="mr-1 h-4 w-4" />
-					Back to Help Center
-				</Link>
-
-				<h1 className="mb-6 text-3xl font-bold">How to Start with Next You</h1>
-
+			<HelpPageLayout
+				title="How to Start with Next You"
+				description="Learn how to get started with Next You and make the most of your personal growth journey."
+				lastUpdated="April 25, 2025"
+			>
 				<div className="prose prose-slate max-w-none dark:prose-invert">
 					<p className="lead">
 						Welcome to Next You! This guide will help you get started on your
@@ -52,35 +44,22 @@ export default function GettingStartedPage() {
 						Next You works by analyzing your digital conversations to identify
 						patterns and insights. To get started:
 					</p>
-					<ol>
-						<li>
-							Navigate to the <strong>Analyses</strong> section in your
-							dashboard
-						</li>
-						<li>
-							Click on <strong>New Analysis</strong>
-						</li>
-						<li>
-							Upload a conversation file or paste text from your digital
-							conversations
-						</li>
-						<li>Give your analysis a name and description</li>
-						<li>
-							Click <strong>Analyze</strong> to begin the process
-						</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Navigate to the Analyses section in your dashboard",
+							"Click on New Analysis",
+							"Upload a conversation file or paste text from your digital conversations",
+							"Give your analysis a name and description",
+							"Click Analyze to begin the process",
+						]}
+					/>
 
-					<div className="my-8 rounded-lg border border-border bg-muted/50 p-4">
-						<h3 className="mb-2 text-lg font-medium">
-							Tip: What Conversations Work Best?
-						</h3>
-						<p className="mb-0">
-							The most insightful analyses come from meaningful conversations.
-							Consider uploading chats where you've discussed your interests,
-							challenges, goals, or reflections. Longer conversations typically
-							provide more comprehensive insights.
-						</p>
-					</div>
+					<HelpTip>
+						The most insightful analyses come from meaningful conversations.
+						Consider uploading chats where you've discussed your interests,
+						challenges, goals, or reflections. Longer conversations typically
+						provide more comprehensive insights.
+					</HelpTip>
 
 					<h2>Step 4: Explore Your Dashboard</h2>
 					<p>
@@ -110,18 +89,16 @@ export default function GettingStartedPage() {
 					<p>
 						Based on your analysis, you can create personalized action plans:
 					</p>
-					<ol>
-						<li>
-							Navigate to the <strong>Action Plans</strong> section
-						</li>
-						<li>
-							Click <strong>New Action Plan</strong>
-						</li>
-						<li>Choose a category or topic you'd like to focus on</li>
-						<li>Set goals and milestones</li>
-						<li>Add specific tasks and deadlines</li>
-						<li>Save your plan and begin tracking your progress</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Navigate to the Action Plans section",
+							"Click New Action Plan",
+							"Choose a category or topic you'd like to focus on",
+							"Set goals and milestones",
+							"Add specific tasks and deadlines",
+							"Save your plan and begin tracking your progress",
+						]}
+					/>
 
 					<h2>Next Steps</h2>
 					<p>
@@ -142,28 +119,42 @@ export default function GettingStartedPage() {
 							you have any questions.
 						</p>
 						<div className="flex flex-wrap gap-3">
-							<Link
-								href="/help/account-setup"
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Account Setup Guide
-							</Link>
-							<Link
-								href="/help/basic-features"
+								<Link href="/help/account-setup">Account Setup Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Basic Features Guide
-							</Link>
-							<Link
-								href="/contact"
+								<Link href="/help/basic-features">Basic Features Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground"
 							>
-								Contact Support
-							</Link>
+								<Link href="/contact">Contact Support</Link>
+							</Button>
 						</div>
 					</div>
 				</div>
-			</div>
+
+				<HelpRelatedArticles
+					articles={[
+						{ title: "Account Setup", href: "/help/account-setup" },
+						{ title: "Basic Features", href: "/help/basic-features" },
+						{ title: "Analysis Types", href: "/help/analysis-types" },
+						{
+							title: "Action Plan Creation",
+							href: "/help/action-plan-creation",
+						},
+					]}
+				/>
+
+				<HelpContactSupport />
+			</HelpPageLayout>
 		</PlainPageShell>
 	);
 }

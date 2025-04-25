@@ -1,28 +1,20 @@
+import { HelpContactSupport } from "@/features/help/components/HelpContactSupport";
+import { HelpPageLayout } from "@/features/help/components/HelpPageLayout";
+import { HelpRelatedArticles } from "@/features/help/components/HelpRelatedArticles";
+import { HelpStepByStep } from "@/features/help/components/HelpStepByStep";
+import { HelpTip } from "@/features/help/components/HelpTip";
 import { PlainPageShell } from "@/shared/components/layout/shell/PlainPageShell/PlainPageShell";
-import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "Basic Features | Next You Help Center",
-	description:
-		"Learn about the core features of Next You and how to use them effectively.",
-};
 
 export default function BasicFeaturesPage() {
 	return (
 		<PlainPageShell>
-			<div className="container max-w-4xl py-10">
-				<Link
-					href="/help"
-					className="mb-6 flex items-center text-sm text-muted-foreground hover:text-primary"
-				>
-					<ArrowLeft className="mr-1 h-4 w-4" />
-					Back to Help Center
-				</Link>
-
-				<h1 className="mb-6 text-3xl font-bold">Using Basic Features</h1>
-
+			<HelpPageLayout
+				title="Using Basic Features"
+				description="Learn about the core features of Next You and how to use them effectively."
+				lastUpdated="April 25, 2025"
+			>
 				<div className="prose prose-slate max-w-none dark:prose-invert">
 					<p className="lead">
 						Next You offers a range of powerful features to help you gain
@@ -57,13 +49,15 @@ export default function BasicFeaturesPage() {
 					<h2>Creating and Managing Analyses</h2>
 					<p>Analyses are at the core of the Next You experience:</p>
 					<h3>Creating a New Analysis</h3>
-					<ol>
-						<li>Navigate to the Analyses section</li>
-						<li>Click "New Analysis"</li>
-						<li>Upload a conversation file or paste text</li>
-						<li>Select analysis options (depth, focus areas, etc.)</li>
-						<li>Click "Start Analysis"</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Navigate to the Analyses section",
+							"Click 'New Analysis'",
+							"Upload a conversation file or paste text",
+							"Select analysis options (depth, focus areas, etc.)",
+							"Click 'Start Analysis'",
+						]}
+					/>
 
 					<h3>Viewing Analysis Results</h3>
 					<p>
@@ -88,21 +82,17 @@ export default function BasicFeaturesPage() {
 						</li>
 					</ul>
 
-					<div className="my-6 rounded-lg border border-border bg-muted/50 p-4">
-						<h3 className="mb-2 text-lg font-medium">Analysis Types</h3>
-						<p className="mb-0">
-							Next You offers different types of analyses depending on your
-							goals:
-							<br />• <strong>Quick Analysis</strong>: Fast overview of main
-							topics
-							<br />• <strong>Deep Analysis</strong>: Comprehensive exploration
-							of patterns and connections
-							<br />• <strong>Focused Analysis</strong>: Targeted analysis on
-							specific areas of interest
-							<br />• <strong>Comparative Analysis</strong>: Compare patterns
-							across different time periods
-						</p>
-					</div>
+					<HelpTip>
+						Next You offers different types of analyses depending on your goals:
+						<br />• <strong>Quick Analysis</strong>: Fast overview of main
+						topics
+						<br />• <strong>Deep Analysis</strong>: Comprehensive exploration of
+						patterns and connections
+						<br />• <strong>Focused Analysis</strong>: Targeted analysis on
+						specific areas of interest
+						<br />• <strong>Comparative Analysis</strong>: Compare patterns
+						across different time periods
+					</HelpTip>
 
 					<h2>Working with Categories</h2>
 					<p>Categories help organize insights from your analyses:</p>
@@ -116,25 +106,29 @@ export default function BasicFeaturesPage() {
 					</ul>
 
 					<h3>Creating Custom Categories</h3>
-					<ol>
-						<li>Go to the Categories section</li>
-						<li>Click "New Category"</li>
-						<li>Name your category and add a description</li>
-						<li>Select related topics or manually add content</li>
-						<li>Save your custom category</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Go to the Categories section",
+							"Click 'New Category'",
+							"Name your category and add a description",
+							"Select related topics or manually add content",
+							"Save your custom category",
+						]}
+					/>
 
 					<h2>Action Plans</h2>
 					<p>Turn insights into concrete steps with action plans:</p>
 					<h3>Creating an Action Plan</h3>
-					<ol>
-						<li>Navigate to Action Plans</li>
-						<li>Click "New Action Plan"</li>
-						<li>Select a category or topic focus</li>
-						<li>Define your goals and timeline</li>
-						<li>Add specific tasks and milestones</li>
-						<li>Set reminders and tracking preferences</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Navigate to Action Plans",
+							"Click 'New Action Plan'",
+							"Select a category or topic focus",
+							"Define your goals and timeline",
+							"Add specific tasks and milestones",
+							"Set reminders and tracking preferences",
+						]}
+					/>
 
 					<h3>Tracking Progress</h3>
 					<ul>
@@ -196,28 +190,42 @@ export default function BasicFeaturesPage() {
 							advanced features.
 						</p>
 						<div className="flex flex-wrap gap-3">
-							<Link
-								href="/help/analysis-types"
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Analysis Types Guide
-							</Link>
-							<Link
-								href="/help/mind-map"
+								<Link href="/help/analysis-types">Analysis Types Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Mind Map Guide
-							</Link>
-							<Link
-								href="/help/action-plan-creation"
+								<Link href="/help/mind-map">Mind Map Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Action Plan Guide
-							</Link>
+								<Link href="/help/action-plan-creation">Action Plan Guide</Link>
+							</Button>
 						</div>
 					</div>
 				</div>
-			</div>
+
+				<HelpRelatedArticles
+					articles={[
+						{ title: "Getting Started", href: "/help/getting-started" },
+						{ title: "Analysis Types", href: "/help/analysis-types" },
+						{ title: "Mind Map Guide", href: "/help/mind-map" },
+						{
+							title: "Action Plan Creation",
+							href: "/help/action-plan-creation",
+						},
+					]}
+				/>
+
+				<HelpContactSupport />
+			</HelpPageLayout>
 		</PlainPageShell>
 	);
 }

@@ -1,28 +1,20 @@
+import { HelpContactSupport } from "@/features/help/components/HelpContactSupport";
+import { HelpPageLayout } from "@/features/help/components/HelpPageLayout";
+import { HelpRelatedArticles } from "@/features/help/components/HelpRelatedArticles";
+import { HelpStepByStep } from "@/features/help/components/HelpStepByStep";
+import { HelpTip } from "@/features/help/components/HelpTip";
 import { PlainPageShell } from "@/shared/components/layout/shell/PlainPageShell/PlainPageShell";
-import { ArrowLeft } from "lucide-react";
-import type { Metadata } from "next";
+import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-	title: "Account Setup Guide | Next You Help Center",
-	description:
-		"Learn how to set up and configure your Next You account for the best experience.",
-};
 
 export default function AccountSetupPage() {
 	return (
 		<PlainPageShell>
-			<div className="container max-w-4xl py-10">
-				<Link
-					href="/help"
-					className="mb-6 flex items-center text-sm text-muted-foreground hover:text-primary"
-				>
-					<ArrowLeft className="mr-1 h-4 w-4" />
-					Back to Help Center
-				</Link>
-
-				<h1 className="mb-6 text-3xl font-bold">Account Setup Guide</h1>
-
+			<HelpPageLayout
+				title="Account Setup Guide"
+				description="Learn how to set up and configure your Next You account for the best experience."
+				lastUpdated="April 25, 2025"
+			>
 				<div className="prose prose-slate max-w-none dark:prose-invert">
 					<p className="lead">
 						Setting up your Next You account properly ensures you get the most
@@ -47,25 +39,22 @@ export default function AccountSetupPage() {
 						</li>
 					</ul>
 
-					<div className="my-6 rounded-lg border border-border bg-muted/50 p-4">
-						<h3 className="mb-2 text-lg font-medium">
-							Converting a Guest Account
-						</h3>
-						<p className="mb-0">
-							If you started with a guest account, you can convert it to a full
-							account at any time without losing your data. Go to Settings &gt;
-							Account and click "Convert to Full Account."
-						</p>
-					</div>
+					<HelpTip>
+						If you started with a guest account, you can convert it to a full
+						account at any time without losing your data. Go to Settings &gt;
+						Account and click "Convert to Full Account."
+					</HelpTip>
 
 					<h2>Profile Information</h2>
 					<p>Complete your profile to help us personalize your experience:</p>
-					<ol>
-						<li>Navigate to Settings &gt; Profile</li>
-						<li>Add your name, profile picture, and bio</li>
-						<li>Set your primary interests and goals</li>
-						<li>Specify your preferred language and region</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Navigate to Settings > Profile",
+							"Add your name, profile picture, and bio",
+							"Set your primary interests and goals",
+							"Specify your preferred language and region",
+						]}
+					/>
 
 					<h2>Privacy Settings</h2>
 					<p>
@@ -142,14 +131,11 @@ export default function AccountSetupPage() {
 						</li>
 					</ul>
 
-					<div className="my-6 rounded-lg border border-border bg-muted/50 p-4">
-						<h3 className="mb-2 text-lg font-medium">Payment Information</h3>
-						<p className="mb-0">
-							For premium plans, you'll need to add a payment method. We accept
-							major credit cards, PayPal, and select regional payment methods.
-							Your payment information is securely stored and processed.
-						</p>
-					</div>
+					<HelpTip>
+						For premium plans, you'll need to add a payment method. We accept
+						major credit cards, PayPal, and select regional payment methods.
+						Your payment information is securely stored and processed.
+					</HelpTip>
 
 					<h2>Data Import Options</h2>
 					<p>Jump-start your experience by importing existing data:</p>
@@ -170,11 +156,13 @@ export default function AccountSetupPage() {
 
 					<h2>Account Verification</h2>
 					<p>Verify your account to access all features:</p>
-					<ol>
-						<li>Check your email for a verification link</li>
-						<li>Click the link to verify your email address</li>
-						<li>Complete any additional verification steps if required</li>
-					</ol>
+					<HelpStepByStep
+						steps={[
+							"Check your email for a verification link",
+							"Click the link to verify your email address",
+							"Complete any additional verification steps if required",
+						]}
+					/>
 
 					<div className="mt-8 rounded-lg border border-border bg-primary/10 p-6">
 						<h3 className="mb-2 text-xl font-semibold">Need More Help?</h3>
@@ -183,28 +171,39 @@ export default function AccountSetupPage() {
 							you have any questions.
 						</p>
 						<div className="flex flex-wrap gap-3">
-							<Link
-								href="/help/getting-started"
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Getting Started Guide
-							</Link>
-							<Link
-								href="/help/basic-features"
+								<Link href="/help/getting-started">Getting Started Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
 							>
-								Basic Features Guide
-							</Link>
-							<Link
-								href="/contact"
+								<Link href="/help/basic-features">Basic Features Guide</Link>
+							</Button>
+							<Button
+								asChild
 								className="rounded-md bg-secondary px-4 py-2 text-sm font-medium text-secondary-foreground"
 							>
-								Contact Support
-							</Link>
+								<Link href="/contact">Contact Support</Link>
+							</Button>
 						</div>
 					</div>
 				</div>
-			</div>
+
+				<HelpRelatedArticles
+					articles={[
+						{ title: "Getting Started", href: "/help/getting-started" },
+						{ title: "Privacy Settings", href: "/help/privacy-settings" },
+						{ title: "Password Reset", href: "/help/password-reset" },
+						{ title: "Subscription Plans", href: "/help/subscription" },
+					]}
+				/>
+
+				<HelpContactSupport />
+			</HelpPageLayout>
 		</PlainPageShell>
 	);
 }
