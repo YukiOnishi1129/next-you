@@ -94,7 +94,7 @@ export default function HowItWorksPage() {
 										first analysis. You can export your history directly from
 										ChatGPT or upload a text file.
 									</p>
-									<Button asChild >
+									<Button asChild>
 										<Link href="/dashboard/analyses/new">
 											Create New Analysis
 										</Link>
@@ -111,7 +111,7 @@ export default function HowItWorksPage() {
 										categories that matter to you, such as Career, Health, or
 										Learning.
 									</p>
-									<Button asChild >
+									<Button asChild>
 										<Link href="/dashboard/categories/new">
 											Create New Category
 										</Link>
