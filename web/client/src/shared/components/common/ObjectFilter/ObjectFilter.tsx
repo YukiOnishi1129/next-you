@@ -47,8 +47,8 @@ export function ObjectFilter({ filters, sortOptions }: ObjectFilterProps) {
 					<SelectValue placeholder="Sort by" />
 				</SelectTrigger>
 				<SelectContent>
-					{sortOptions.map((option) => (
-						<SelectItem key={option.value} value={option.value}>
+					{sortOptions.map((option, index) => (
+						<SelectItem key={`${option.name}-${index}`} value={option.value}>
 							{option.name}
 						</SelectItem>
 					))}
