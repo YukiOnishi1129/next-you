@@ -1,1 +1,1 @@
-export * from "./ObjectViewToggle"
+export * from "./ObjectViewToggle";
