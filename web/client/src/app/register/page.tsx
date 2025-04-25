@@ -190,7 +190,7 @@ export default function RegisterPage() {
 														I agree to the{" "}
 														<Link
 															href="/terms"
-															className="text-rose-500 hover:underline"
+															className="text-primary hover:underline"
 														>
 															Terms of Service
 														</Link>
@@ -211,7 +211,7 @@ export default function RegisterPage() {
 								Already have an account?
 								<Link
 									href="/login"
-									className="text-rose-500 hover:underline ml-1"
+									className="text-primary hover:underline ml-1"
 								>
 									Login
 								</Link>
