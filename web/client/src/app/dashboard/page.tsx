@@ -4,7 +4,7 @@ import { MindMapVisualization } from "@/features/analysis/components/MindMapVisu
 import { CategoryCard } from "@/features/categories/components/CategoryCard";
 import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 import { ObjectGrid } from "@/shared/components/common/ObjectGrid";
-import { PageHeader } from "@/shared/components/layout/headeer/PageHeader";
+import { PageHeader } from "@/shared/components/layout/header/PageHeader";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,

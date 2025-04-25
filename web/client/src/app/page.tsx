@@ -1,8 +1,9 @@
+import { UnauthenticatedPageHeader } from "@/shared/components/layout/header/UnauthenticatedPageHeader/UnauthenticatedPageHeader";
+import { TopPageShell } from "@/shared/components/layout/shell/TopPageShell/TopPageShell";
 import { Button } from "@/shared/components/ui/button";
 import {
 	ArrowRight,
 	BarChart2,
-	Brain,
 	Check,
 	FileUp,
 	LineChart,
@@ -14,26 +15,8 @@ import Link from "next/link";
 
 export default function Home() {
 	return (
-		<div className="flex min-h-screen flex-col">
-			<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="container flex h-16 items-center">
-					<div className="mr-4 flex">
-						<Link href="/" className="flex items-center space-x-2">
-							<Brain className="h-6 w-6 text-rose-500" />
-							<span className="font-bold">NextYou</span>
-						</Link>
-					</div>
-					<div className="ml-auto flex items-center space-x-4">
-						<Button variant="outline" asChild>
-							<Link href="/login">Login</Link>
-						</Button>
-						<Button asChild className="bg-rose-500 hover:bg-rose-600">
-							<Link href="/register">Sign Up</Link>
-						</Button>
-					</div>
-				</div>
-			</header>
-			<main className="flex-1">
+		<TopPageShell>
+			<div>
 				{/* Hero Section */}
 				<section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-gray-950 to-background dark:from-gray-950 dark:to-background">
 					<div className="container px-4 md:px-6">
@@ -41,8 +24,8 @@ export default function Home() {
 							<div className="flex flex-col justify-center space-y-4">
 								<div className="space-y-2">
 									<h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white">
-										From <span className="text-rose-500">Current You</span> to{" "}
-										<span className="text-rose-500">Next You</span>
+										From <span className="text-primary">Current You</span> to{" "}
+										<span className="text-primary">Next You</span>
 									</h1>
 									<p className="max-w-[600px] text-gray-400 md:text-xl">
 										Optimize your future self. Gain insights from your ChatGPT
@@ -51,11 +34,7 @@ export default function Home() {
 									</p>
 								</div>
 								<div className="flex flex-col sm:flex-row gap-3">
-									<Button
-										asChild
-										size="lg"
-										className="bg-rose-500 hover:bg-rose-600"
-									>
+									<Button asChild size="lg">
 										<Link href="/register">
 											Get Started
 											<ArrowRight className="ml-2 h-4 w-4" />
@@ -89,13 +68,13 @@ export default function Home() {
 									/>
 									<div className="absolute -bottom-6 -left-6 h-[150px] w-[200px] rounded-lg border border-gray-800 bg-gray-900 p-4 shadow-lg">
 										<div className="flex items-center space-x-2">
-											<LineChart className="h-6 w-6 text-rose-500" />
+											<LineChart className="h-6 w-6 text-primary" />
 											<h3 className="font-medium text-white">
 												Personal Growth
 											</h3>
 										</div>
 										<div className="mt-2 h-2 w-full rounded-full bg-gray-800">
-											<div className="h-full w-4/5 rounded-full bg-rose-500" />
+											<div className="h-full w-4/5 rounded-full bg-primary" />
 										</div>
 									</div>
 								</div>
@@ -121,7 +100,7 @@ export default function Home() {
 						<div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-12 mt-8">
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<FileUp className="h-6 w-6 text-rose-500" />
+									<FileUp className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Upload & Analyze</h3>
 								<p className="text-center text-muted-foreground">
@@ -131,7 +110,7 @@ export default function Home() {
 							</div>
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<BarChart2 className="h-6 w-6 text-rose-500" />
+									<BarChart2 className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Discover Insights</h3>
 								<p className="text-center text-muted-foreground">
@@ -141,7 +120,7 @@ export default function Home() {
 							</div>
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<ListTodo className="h-6 w-6 text-rose-500" />
+									<ListTodo className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Take Action</h3>
 								<p className="text-center text-muted-foreground">
@@ -195,7 +174,7 @@ export default function Home() {
 									className="flex items-start space-x-4"
 								>
 									<div className="mt-1 rounded-full bg-rose-100 p-1 dark:bg-rose-900">
-										<Check className="h-5 w-5 text-rose-500" />
+										<Check className="h-5 w-5 text-primary" />
 									</div>
 									<div>
 										<h3 className="text-xl font-bold">{benefit.title}</h3>
@@ -226,7 +205,6 @@ export default function Home() {
 								<Button
 									asChild
 									size="lg"
-									className="bg-rose-500 hover:bg-rose-600"
 								>
 									<Link href="/register">
 										Sign Up Now
@@ -243,14 +221,7 @@ export default function Home() {
 						</div>
 					</div>
 				</section>
-			</main>
-			<footer className="w-full border-t py-6">
-				<div className="container flex flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
-					<p className="text-center text-sm leading-loose text-muted-foreground">
-						© 2025 NextYou. All rights reserved.
-					</p>
-				</div>
-			</footer>
-		</div>
+			</div>
+		</TopPageShell>
 	);
 }
