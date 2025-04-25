@@ -12,7 +12,7 @@ export const TopPageShell: FC<Props> = ({ children }) => (
 			<UnauthenticatedPageHeader />
 		</header>
 		<main>{children}</main>
-		<footer className="w-full border-t py-6">
+		<footer>
 			<Footer />
 		</footer>
 	</div>

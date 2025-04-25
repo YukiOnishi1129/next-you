@@ -23,8 +23,8 @@ export default function Home() {
 							<div className="flex flex-col justify-center space-y-4">
 								<div className="space-y-2">
 									<h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white">
-										From <span className="text-rose-500">Current You</span> to{" "}
-										<span className="text-rose-500">Next You</span>
+										From <span className="text-primary">Current You</span> to{" "}
+										<span className="text-primary">Next You</span>
 									</h1>
 									<p className="max-w-[600px] text-gray-400 md:text-xl">
 										Optimize your future self. Gain insights from your ChatGPT
@@ -33,11 +33,7 @@ export default function Home() {
 									</p>
 								</div>
 								<div className="flex flex-col sm:flex-row gap-3">
-									<Button
-										asChild
-										size="lg"
-										className="bg-rose-500 hover:bg-rose-600"
-									>
+									<Button asChild size="lg">
 										<Link href="/register">
 											Get Started
 											<ArrowRight className="ml-2 h-4 w-4" />
@@ -71,13 +67,13 @@ export default function Home() {
 									/>
 									<div className="absolute -bottom-6 -left-6 h-[150px] w-[200px] rounded-lg border border-gray-800 bg-gray-900 p-4 shadow-lg">
 										<div className="flex items-center space-x-2">
-											<LineChart className="h-6 w-6 text-rose-500" />
+											<LineChart className="h-6 w-6 text-primary" />
 											<h3 className="font-medium text-white">
 												Personal Growth
 											</h3>
 										</div>
 										<div className="mt-2 h-2 w-full rounded-full bg-gray-800">
-											<div className="h-full w-4/5 rounded-full bg-rose-500" />
+											<div className="h-full w-4/5 rounded-full bg-primary" />
 										</div>
 									</div>
 								</div>
@@ -103,7 +99,7 @@ export default function Home() {
 						<div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-12 mt-8">
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<FileUp className="h-6 w-6 text-rose-500" />
+									<FileUp className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Upload & Analyze</h3>
 								<p className="text-center text-muted-foreground">
@@ -113,7 +109,7 @@ export default function Home() {
 							</div>
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<BarChart2 className="h-6 w-6 text-rose-500" />
+									<BarChart2 className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Discover Insights</h3>
 								<p className="text-center text-muted-foreground">
@@ -123,7 +119,7 @@ export default function Home() {
 							</div>
 							<div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
 								<div className="rounded-full bg-rose-100 p-3 dark:bg-rose-900">
-									<ListTodo className="h-6 w-6 text-rose-500" />
+									<ListTodo className="h-6 w-6 text-primary" />
 								</div>
 								<h3 className="text-xl font-bold">Take Action</h3>
 								<p className="text-center text-muted-foreground">
@@ -183,7 +179,7 @@ export default function Home() {
 									key={`${step.title}-${index}`}
 									className="flex flex-col items-center space-y-4"
 								>
-									<div className="flex h-16 w-16 items-center justify-center rounded-full bg-rose-500 text-white text-2xl font-bold">
+									<div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-white text-2xl font-bold">
 										{step.step}
 									</div>
 									<h3 className="text-xl font-bold">{step.title}</h3>
@@ -241,7 +237,7 @@ export default function Home() {
 									className="flex items-start space-x-4"
 								>
 									<div className="mt-1 rounded-full bg-rose-100 p-1 dark:bg-rose-900">
-										<Check className="h-5 w-5 text-rose-500" />
+										<Check className="h-5 w-5 text-primary" />
 									</div>
 									<div>
 										<h3 className="text-xl font-bold">{benefit.title}</h3>
@@ -269,11 +265,7 @@ export default function Home() {
 								</p>
 							</div>
 							<div className="flex flex-col sm:flex-row gap-3">
-								<Button
-									asChild
-									size="lg"
-									className="bg-rose-500 hover:bg-rose-600"
-								>
+								<Button asChild size="lg">
 									<Link href="/register">
 										Sign Up Now
 										<ArrowRight className="ml-2 h-4 w-4" />

@@ -8,7 +8,7 @@ type Props = {
 export const PlainPageShell: FC<Props> = ({ children }) => (
 	<div className="flex min-h-screen flex-col">
 		<main>{children}</main>
-		<footer className="w-full border-t py-6">
+		<footer>
 			<Footer />
 		</footer>
 	</div>

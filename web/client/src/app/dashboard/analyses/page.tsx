@@ -1,8 +1,8 @@
 import { AnalysisCard } from "@/features/analysis/components/AnalysisCard";
-import { DashboardShell } from "@/features/dashboard/components/DashboardShell";
 import { ObjectFilter } from "@/shared/components/common/ObjectFilter";
 import { ObjectGrid } from "@/shared/components/common/ObjectGrid";
 import { PageHeader } from "@/shared/components/layout/header/PageHeader";
+import { DashboardShell } from "@/shared/components/layout/shell/DashboardShell";
 import { Button } from "@/shared/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
