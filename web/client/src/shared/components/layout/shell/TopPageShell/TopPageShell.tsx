@@ -1,3 +1,4 @@
+import { Footer } from "@/shared/components/layout/footer/Footer/Footer";
 import { UnauthenticatedPageHeader } from "@/shared/components/layout/header/UnauthenticatedPageHeader/UnauthenticatedPageHeader";
 import type { FC } from "react";
 
@@ -12,11 +13,7 @@ export const TopPageShell: FC<Props> = ({ children }) => (
 		</header>
 		<main>{children}</main>
 		<footer className="w-full border-t py-6">
-			<div className="container flex flex-col items-center justify-center gap-4 md:flex-row md:gap-8">
-				<p className="text-center text-sm leading-loose text-muted-foreground">
-					© 2025 NextYou. All rights reserved.
-				</p>
-			</div>
+			<Footer />
 		</footer>
 	</div>
 );
