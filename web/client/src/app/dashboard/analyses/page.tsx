@@ -4,6 +4,7 @@ import { ObjectGrid } from "@/shared/components/common/ObjectGrid";
 import { PageHeader } from "@/shared/components/layout/header/PageHeader";
 import { DashboardShell } from "@/shared/components/layout/shell/DashboardShell";
 import { Button } from "@/shared/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/shared/components/ui/scroll-area";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -51,6 +52,30 @@ export default function AnalysesPage() {
 		},
 	];
 
+	// Extended list of categories for demonstration
+	const allCategories = [
+		{ name: "All", value: "all" },
+		{ name: "Recent", value: "recent" },
+		{ name: "Programming", value: "programming" },
+		{ name: "Health", value: "health" },
+		{ name: "Productivity", value: "productivity" },
+		{ name: "Career", value: "career" },
+		{ name: "Reading", value: "reading" },
+		{ name: "Knowledge Management", value: "knowledge-management" },
+		{ name: "Time Management", value: "time-management" },
+		{ name: "Task Management", value: "task-management" },
+		{ name: "Skill Development", value: "skill-development" },
+		{ name: "Job Change", value: "job-change" },
+		{ name: "Morning Routine", value: "morning-routine" },
+		{ name: "Habit Formation", value: "habit-formation" },
+		{ name: "Information Organization", value: "information-organization" },
+		{ name: "Project Management", value: "project-management" },
+		{ name: "Learning", value: "learning" },
+		{ name: "Personal Growth", value: "personal-growth" },
+		{ name: "Relationships", value: "relationships" },
+		{ name: "Finance", value: "finance" },
+	];
+
 	// Update the page header and button text
 	return (
 		<DashboardShell>
@@ -58,7 +83,7 @@ export default function AnalysesPage() {
 				heading="Analysis"
 				description="View analysis results and insights from your ChatGPT history"
 				action={
-					<Button asChild>
+					<Button asChild className="bg-rose-500 hover:bg-rose-600">
 						<Link href="/dashboard/analyses/new">
 							<Plus className="mr-2 h-4 w-4" />
 							New Analysis
@@ -67,20 +92,35 @@ export default function AnalysesPage() {
 				}
 			/>
 
-			<ObjectFilter
-				filters={[
-					{ name: "All", value: "all" },
-					{ name: "Recent", value: "recent" },
-					{ name: "Programming", value: "programming" },
-					{ name: "Health", value: "health" },
-					{ name: "Productivity", value: "productivity" },
-				]}
-				sortOptions={[
-					{ name: "Newest", value: "newest" },
-					{ name: "Oldest", value: "oldest" },
-					{ name: "By Category", value: "category" },
-				]}
-			/>
+			<div className="mb-6">
+				<ScrollArea className="w-full whitespace-nowrap">
+					<div className="flex space-x-2 p-1">
+						{allCategories.map((filter) => (
+							<Button
+								key={filter.value}
+								variant={filter.value === "all" ? "default" : "outline"}
+								size="sm"
+								className={
+									filter.value === "all" ? "bg-rose-500 hover:bg-rose-600" : ""
+								}
+							>
+								{filter.name}
+							</Button>
+						))}
+					</div>
+					<ScrollBar orientation="horizontal" />
+				</ScrollArea>
+			</div>
+
+			<div className="flex items-center justify-between mb-4">
+				<ObjectFilter
+					sortOptions={[
+						{ name: "Newest", value: "newest" },
+						{ name: "Oldest", value: "oldest" },
+						{ name: "By Category", value: "category" },
+					]}
+				/>
+			</div>
 
 			<ObjectGrid>
 				<div className="col-span-full md:col-span-1 flex items-center justify-center border border-dashed rounded-lg p-8">
