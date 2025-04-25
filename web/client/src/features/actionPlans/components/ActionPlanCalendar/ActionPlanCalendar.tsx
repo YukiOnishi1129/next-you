@@ -1,384 +1,461 @@
 "use client";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/shared/components/ui/card";
 import {
+	Tabs,
+	TabsContent,
+	TabsList,
+	TabsTrigger,
+} from "@/shared/components/ui/tabs";
+import {
 	addMonths,
+	differenceInDays,
 	eachDayOfInterval,
 	endOfMonth,
 	format,
 	isSameDay,
 	isSameMonth,
+	isWithinInterval,
 	parseISO,
 	startOfMonth,
 	subMonths,
 } from "date-fns";
-import { enUS } from "date-fns/locale";
-import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
-interface ActionPlan {
+type Task = {
+	id: string;
+	title: string;
+	completed: boolean;
+};
+
+type ActionPlan = {
 	id: string;
 	title: string;
 	description: string;
 	startDate: string;
 	dueDate: string;
 	category: string;
+	categoryId: string;
 	completed: boolean;
-	priority: string;
-	color?: string; // Optional custom color
-}
+	priority: "High" | "Medium" | "Low";
+	color: string;
+	tasks: Task[];
+	progress: number;
+	userId: string;
+	createdAt: string;
+	updatedAt: string;
+};
 
-interface ActionPlanCalendarProps {
+type ActionPlanCalendarProps = {
 	actionPlans: ActionPlan[];
-}
+};
 
-// Sample data with start and due dates
-const sampleActionPlans: ActionPlan[] = [
-	{
-		id: "1",
-		title: "Complete Next.js Tutorial",
-		description:
-			"Work through the official documentation tutorial to understand the basic usage",
-		startDate: "2025-04-22",
-		dueDate: "2025-04-25",
-		category: "Programming",
-		completed: false,
-		priority: "Medium",
-		color: "#3b82f6", // blue
-	},
-	{
-		id: "2",
-		title: "Morning Walking Routine",
-		description:
-			"Develop a habit of walking for 20 minutes every morning and continue for a week",
-		startDate: "2025-04-15",
-		dueDate: "2025-04-22",
-		category: "Health",
-		completed: true,
-		priority: "High",
-		color: "#22c55e", // green
-	},
-	{
-		id: "3",
-		title: "Pomodoro Technique",
-		description:
-			"Implement 25-minute work, 5-minute break cycles four times a day to improve focus",
-		startDate: "2025-04-23",
-		dueDate: "2025-04-24",
-		category: "Productivity",
-		completed: false,
-		priority: "Low",
-		color: "#a855f7", // purple
-	},
-	{
-		id: "4",
-		title: "TypeScript Learning",
-		description:
-			"Read the official documentation and understand the basic concepts of the type system",
-		startDate: "2025-04-25",
-		dueDate: "2025-04-30",
-		category: "Programming",
-		completed: false,
-		priority: "Medium",
-		color: "#3b82f6", // blue
-	},
-	{
-		id: "5",
-		title: "Disney Trip Planning",
-		description: "Plan the upcoming Disney trip with family",
-		startDate: "2025-04-16",
-		dueDate: "2025-04-18",
-		category: "Personal",
-		completed: false,
-		priority: "High",
-		color: "#14b8a6", // teal
-	},
-	{
-		id: "6",
-		title: "Live Streaming",
-		description: "Prepare and conduct live streaming session",
-		startDate: "2025-04-20",
-		dueDate: "2025-04-20",
-		category: "Career",
-		completed: true,
-		priority: "Medium",
-		color: "#ec4899", // pink
-	},
-	{
-		id: "7",
-		title: "Haircut Appointment",
-		description: "Regular grooming session",
-		startDate: "2025-04-24",
-		dueDate: "2025-04-24",
-		category: "Personal",
-		completed: false,
-		priority: "Low",
-		color: "#14b8a6", // teal
-	},
-	{
-		id: "8",
-		title: "End of Month Planning",
-		description: "Review month progress and plan for next month",
-		startDate: "2025-04-29",
-		dueDate: "2025-05-02",
-		category: "Productivity",
-		completed: false,
-		priority: "High",
-		color: "#a855f7", // purple
-	},
-];
+export function ActionPlanCalendar({ actionPlans }: ActionPlanCalendarProps) {
+	const [currentDate, setCurrentDate] = useState(new Date());
+	const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+	const [activeView, setActiveView] = useState<"month" | "multi-month">(
+		"month",
+	);
 
-export function ActionPlanCalendar({
-	actionPlans = sampleActionPlans,
-}: ActionPlanCalendarProps) {
-	const [currentMonth, setCurrentMonth] = useState(new Date(2025, 3, 1)); // April 2025
-	const [selectedDate, setSelectedDate] = useState<Date>(new Date(2025, 3, 23)); // April 24, 2025
-	const [selectedDayEvents, setSelectedDayEvents] = useState<ActionPlan[]>([]);
+	// Generate months from April to August
+	const startMonth = new Date(2023, 3, 1); // April 2023
+	const months = Array.from({ length: 5 }, (_, i) => addMonths(startMonth, i));
 
-	// Navigate to previous month
-	const prevMonth = () => {
-		setCurrentMonth(subMonths(currentMonth, 1));
+	// Get days for the current month
+	const firstDayOfMonth = startOfMonth(currentDate);
+	const lastDayOfMonth = endOfMonth(currentDate);
+	const daysInMonth = eachDayOfInterval({
+		start: firstDayOfMonth,
+		end: lastDayOfMonth,
+	});
+
+	// Get the day of the week for the first day (0 = Sunday, 1 = Monday, etc.)
+	const startDay = firstDayOfMonth.getDay();
+
+	// Function to check if a plan falls on a specific date
+	const getPlanForDate = (date: Date, plan: ActionPlan) => {
+		const planStartDate = parseISO(plan.startDate);
+		const planDueDate = parseISO(plan.dueDate);
+
+		return isWithinInterval(date, { start: planStartDate, end: planDueDate });
 	};
 
-	// Navigate to next month
-	const nextMonth = () => {
-		setCurrentMonth(addMonths(currentMonth, 1));
+	// Function to determine if a date is the start, middle, or end of a plan
+	const getPlanPosition = (date: Date, plan: ActionPlan) => {
+		const planStartDate = parseISO(plan.startDate);
+		const planDueDate = parseISO(plan.dueDate);
+
+		const isStart = isSameDay(date, planStartDate);
+		const isEnd = isSameDay(date, planDueDate);
+
+		if (isStart && isEnd) return "single";
+		if (isStart) return "start";
+		if (isEnd) return "end";
+		return "middle";
 	};
 
-	// Update selected day events when date changes
-	useEffect(() => {
-		if (selectedDate) {
-			const dayEvents = actionPlans.filter((plan) => {
-				const startDate = parseISO(plan.startDate);
-				const dueDate = parseISO(plan.dueDate);
-
-				// Check if the selected date falls within the plan's date range
-				return (
-					(selectedDate >= startDate && selectedDate <= dueDate) ||
-					isSameDay(selectedDate, startDate) ||
-					isSameDay(selectedDate, dueDate)
-				);
-			});
-			setSelectedDayEvents(dayEvents);
-		}
-	}, [selectedDate, actionPlans]);
-
-	// Generate calendar days for the current month
-	const monthStart = startOfMonth(currentMonth);
-	const monthEnd = endOfMonth(currentMonth);
-	const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-
-	// Function to determine if an event should be displayed on a specific day
-	const shouldDisplayEvent = (event: ActionPlan, day: Date) => {
-		const startDate = parseISO(event.startDate);
-		const dueDate = parseISO(event.dueDate);
-		return (
-			(day >= startDate && day <= dueDate) ||
-			isSameDay(day, startDate) ||
-			isSameDay(day, dueDate)
-		);
+	// Get plans for a specific date
+	const getPlansForDate = (date: Date) => {
+		return actionPlans.filter((plan) => getPlanForDate(date, plan));
 	};
 
-	// Function to determine if an event starts on a specific day
-	const isEventStart = (event: ActionPlan, day: Date) => {
-		return isSameDay(day, parseISO(event.startDate));
-	};
+	// Handle month navigation
+	const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
+	const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
 
-	// Function to determine if an event ends on a specific day
-	const isEventEnd = (event: ActionPlan, day: Date) => {
-		return isSameDay(day, parseISO(event.dueDate));
-	};
-
-	// Create calendar rows with days
-	const renderCalendarDays = () => {
-		const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-		return (
-			<div className="grid grid-cols-7 gap-px bg-gray-800">
-				{/* Day headers */}
-				{dayNames.map((day) => (
-					<div
-						key={day}
-						className="text-center py-2 text-sm font-medium text-gray-300"
-					>
-						{day}
-					</div>
-				))}
-
-				{/* Calendar days */}
-				{days.map((day, i) => {
-					// Find events for this day
-					const dayEvents = actionPlans.filter((plan) =>
-						shouldDisplayEvent(plan, day),
-					);
-
-					const isSelected = isSameDay(day, selectedDate);
-					const isToday = isSameDay(day, new Date());
-
-					return (
-						<div
-							key={`${day.toString()}-${i}`}
-							className={`min-h-[100px] border-gray-700 border p-1 ${
-								!isSameMonth(day, currentMonth)
-									? "bg-gray-900 text-gray-600"
-									: "bg-gray-950"
-							} ${isSelected ? "border-rose-500 border-2" : ""} ${isToday ? "font-bold" : ""}`}
-							onClick={() => setSelectedDate(day)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter" || e.key === " ") {
-									// Enter or Space で実行
-									setSelectedDate(day);
-								}
-							}}
-						>
-							<div
-								className={`text-right mb-1 ${isToday ? "text-rose-500" : "text-gray-300"}`}
-							>
-								{format(day, "d")}
-							</div>
-							<div className="space-y-1">
-								{dayEvents.slice(0, 3).map((event, idx) => {
-									const isStart = isEventStart(event, day);
-									const isEnd = isEventEnd(event, day);
-									const isMiddle = !isStart && !isEnd;
-
-									return (
-										<div
-											key={`${event.id}-${idx}`}
-											className={`text-xs truncate px-1 py-0.5 text-white ${
-												isStart ? "rounded-l-md" : ""
-											} ${isEnd ? "rounded-r-md" : ""} ${isMiddle ? "rounded-none" : ""}`}
-											style={{ backgroundColor: event.color || "#6b7280" }}
-											title={event.title}
-										>
-											{isStart && event.title}
-										</div>
-									);
-								})}
-								{dayEvents.length > 3 && (
-									<div className="text-xs text-gray-400">
-										+{dayEvents.length - 3} more
-									</div>
-								)}
-							</div>
-						</div>
-					);
-				})}
-			</div>
-		);
-	};
+	// Get plans for selected date
+	const selectedDatePlans = selectedDate ? getPlansForDate(selectedDate) : [];
 
 	return (
-		<div className="space-y-4">
-			<Card className="bg-gray-950 border-gray-800 text-white">
-				<CardHeader className="pb-2 border-b border-gray-800">
-					<div className="flex items-center justify-between">
-						<CardTitle>Calendar</CardTitle>
-						<div className="flex items-center space-x-2">
-							<Button
-								variant="outline"
-								size="icon"
-								onClick={prevMonth}
-								className="border-gray-700 bg-gray-900 hover:bg-gray-800"
-							>
+		<Card className="border-gray-700 bg-gray-800">
+			<CardHeader className="pb-3">
+				<CardTitle className="text-xl font-semibold">
+					Action Plan Calendar
+				</CardTitle>
+				<Tabs
+					value={activeView}
+					onValueChange={(value) =>
+						setActiveView(value as "month" | "multi-month")
+					}
+					className="mt-2"
+				>
+					<TabsList className="bg-gray-900">
+						<TabsTrigger
+							value="month"
+							className="data-[state=active]:bg-gray-700"
+						>
+							Month View
+						</TabsTrigger>
+						<TabsTrigger
+							value="multi-month"
+							className="data-[state=active]:bg-gray-700"
+						>
+							April - August
+						</TabsTrigger>
+					</TabsList>
+				</Tabs>
+			</CardHeader>
+			<CardContent>
+				<TabsContent value="month" className="mt-0">
+					<div className="flex items-center justify-between mb-4">
+						<h2 className="text-lg font-medium">
+							{format(currentDate, "MMMM yyyy")}
+						</h2>
+						<div className="flex gap-1">
+							<Button variant="outline" size="icon" onClick={prevMonth}>
 								<ChevronLeft className="h-4 w-4" />
 							</Button>
-							<div className="font-medium">
-								{format(currentMonth, "MMMM yyyy", { locale: enUS })}
-							</div>
-							<Button
-								variant="outline"
-								size="icon"
-								onClick={nextMonth}
-								className="border-gray-700 bg-gray-900 hover:bg-gray-800"
-							>
+							<Button variant="outline" size="icon" onClick={nextMonth}>
 								<ChevronRight className="h-4 w-4" />
 							</Button>
 						</div>
 					</div>
-					<CardDescription className="text-gray-400">
-						View your action plans by date range
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="p-0">{renderCalendarDays()}</CardContent>
-			</Card>
 
-			<Card className="bg-gray-950 border-gray-800 text-white">
-				<CardHeader className="border-b border-gray-800">
-					<CardTitle>
-						Action Plans for {format(selectedDate, "MMMM d, yyyy")}
-					</CardTitle>
-					<CardDescription className="text-gray-400">
-						{selectedDayEvents.length} action plan
-						{selectedDayEvents.length !== 1 ? "s" : ""} scheduled
-					</CardDescription>
-				</CardHeader>
-				<CardContent className="pt-4">
-					{selectedDayEvents.length > 0 ? (
-						<div className="space-y-4">
-							{selectedDayEvents.map((plan) => (
+					{/* Calendar grid */}
+					<div className="grid grid-cols-7 gap-1 mb-4">
+						{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+							<div key={day} className="text-center text-sm font-medium py-2">
+								{day}
+							</div>
+						))}
+
+						{/* Empty cells for days before the first day of the month */}
+						{Array.from({ length: startDay }).map((_, index) => {
+							const emptyDate = new Date(firstDayOfMonth);
+							emptyDate.setDate(emptyDate.getDate() - (startDay - index)); // 月の開始前の日付を生成
+							return (
 								<div
-									key={plan.id}
-									className="border border-gray-800 rounded-lg p-4 bg-gray-900"
+									key={`empty-start-${emptyDate.toISOString()}`}
+									className="h-24 border border-gray-700 rounded-md bg-gray-900"
+								/>
+							);
+						})}
+
+						{/* Days of the month */}
+						{daysInMonth.map((day) => {
+							const plansForDay = getPlansForDate(day);
+							const isSelected = selectedDate && isSameDay(day, selectedDate);
+
+							return (
+								<div
+									key={day.toString()}
+									className={`h-24 border border-gray-700 rounded-md overflow-hidden ${
+										isSelected ? "ring-2 ring-rose-500" : ""
+									} ${isSameMonth(day, currentDate) ? "bg-gray-800" : "bg-gray-900 opacity-50"}`}
+									onClick={() => setSelectedDate(day)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter" || e.key === " ") {
+											setSelectedDate(day);
+										}
+									}}
 								>
-									<div className="flex items-center justify-between">
-										<h3 className="font-medium text-white">{plan.title}</h3>
-										<Badge
-											variant="outline"
-											className="border-gray-700 text-gray-300"
-										>
-											{plan.category}
-										</Badge>
-									</div>
-									<p className="text-sm text-gray-400 mt-2">
-										{plan.description}
-									</p>
-									<div className="flex justify-between items-center mt-2">
-										<div className="text-xs text-gray-400">
-											{format(parseISO(plan.startDate), "MMM d")} -{" "}
-											{format(parseISO(plan.dueDate), "MMM d, yyyy")}
+									<div className="p-1">
+										<div className="text-right text-sm">{format(day, "d")}</div>
+										<div className="mt-1 space-y-1 max-h-[70px] overflow-y-auto">
+											{plansForDay.slice(0, 3).map((plan) => {
+												const position = getPlanPosition(day, plan);
+
+												return (
+													<div
+														key={plan.id}
+														className={`text-xs truncate px-1 py-0.5 ${
+															position === "single"
+																? "rounded"
+																: position === "start"
+																	? "rounded-l"
+																	: position === "end"
+																		? "rounded-r"
+																		: ""
+														}`}
+														style={{
+															backgroundColor: `${plan.color}20`,
+															color: plan.color,
+															borderLeft:
+																position === "start" || position === "single"
+																	? `3px solid ${plan.color}`
+																	: "none",
+														}}
+													>
+														{position === "start" || position === "single"
+															? plan.title
+															: ""}
+													</div>
+												);
+											})}
+											{plansForDay.length > 3 && (
+												<div className="text-xs text-gray-400 pl-1">
+													+{plansForDay.length - 3} more
+												</div>
+											)}
 										</div>
-										<Badge
-											variant="outline"
-											className={
-												plan.completed
-													? "border-green-800 bg-green-950 text-green-400"
-													: "border-gray-700 text-gray-300"
-											}
-										>
-											{plan.completed ? "Completed" : "Pending"}
-										</Badge>
 									</div>
-									<Button
-										variant="ghost"
-										size="sm"
-										asChild
-										className="mt-2 p-0 text-rose-400 hover:text-rose-300"
-									>
-										<Link href={`/dashboard/action-plans/${plan.id}`}>
-											View details
-											<ArrowRight className="ml-2 h-4 w-4" />
-										</Link>
-									</Button>
 								</div>
-							))}
-						</div>
-					) : (
-						<p className="text-gray-400 text-sm">
-							No action plans scheduled for this date.
-						</p>
-					)}
-				</CardContent>
-			</Card>
-		</div>
+							);
+						})}
+
+						{/* Empty cells for days after the last day of the month */}
+						{Array.from({ length: 42 - daysInMonth.length - startDay }).map(
+							(_, index) => {
+								const emptyDate = new Date(lastDayOfMonth);
+								emptyDate.setDate(lastDayOfMonth.getDate() + index + 1); // 月末の次の日から順番に日付を生成
+								return (
+									<div
+										key={`empty-end-${emptyDate.toISOString()}`}
+										className="h-24 border border-gray-700 rounded-md bg-gray-900"
+									/>
+								);
+							},
+						)}
+					</div>
+				</TabsContent>
+
+				<TabsContent value="multi-month" className="mt-0">
+					<div className="space-y-8">
+						{months.map((month) => {
+							const firstDay = startOfMonth(month);
+							const lastDay = endOfMonth(month);
+							const days = eachDayOfInterval({ start: firstDay, end: lastDay });
+							const startDayOfWeek = firstDay.getDay();
+
+							return (
+								<div key={month.toString()} className="mb-6">
+									<h2 className="text-lg font-medium mb-3">
+										{format(month, "MMMM yyyy")}
+									</h2>
+
+									<div className="grid grid-cols-7 gap-1">
+										{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+											(day) => (
+												<div
+													key={`${month}-${day}`}
+													className="text-center text-xs font-medium py-1"
+												>
+													{day}
+												</div>
+											),
+										)}
+
+										{/* Empty cells for days before the first day of the month */}
+										{Array.from({ length: startDayOfWeek }).map((_, index) => {
+											const emptyDate = new Date(month);
+											emptyDate.setDate(-index); // 月の開始前の日付を生成
+											return (
+												<div
+													key={`empty-${emptyDate.toISOString()}`}
+													className="h-16 border border-gray-700 rounded-md bg-gray-900"
+												/>
+											);
+										})}
+
+										{/* Days of the month */}
+										{days.map((day) => {
+											const plansForDay = getPlansForDate(day);
+											const isSelected =
+												selectedDate && isSameDay(day, selectedDate);
+
+											return (
+												<div
+													key={day.toString()}
+													className={`h-16 border border-gray-700 rounded-md overflow-hidden ${
+														isSelected ? "ring-2 ring-rose-500" : ""
+													} bg-gray-800`}
+													onClick={() => setSelectedDate(day)}
+													onKeyDown={(e) => {
+														if (e.key === "Enter" || e.key === " ") {
+															// Enter or Space で実行
+															setSelectedDate(day);
+														}
+													}}
+												>
+													<div className="p-1">
+														<div className="text-right text-xs">
+															{format(day, "d")}
+														</div>
+														<div className="mt-1 space-y-1 max-h-[40px] overflow-y-auto">
+															{plansForDay.slice(0, 2).map((plan) => {
+																const position = getPlanPosition(day, plan);
+
+																return (
+																	<div
+																		key={plan.id}
+																		className={`text-[10px] truncate px-1 ${
+																			position === "single"
+																				? "rounded"
+																				: position === "start"
+																					? "rounded-l"
+																					: position === "end"
+																						? "rounded-r"
+																						: ""
+																		}`}
+																		style={{
+																			backgroundColor: `${plan.color}20`,
+																			color: plan.color,
+																			borderLeft:
+																				position === "start" ||
+																				position === "single"
+																					? `2px solid ${plan.color}`
+																					: "none",
+																		}}
+																	>
+																		{position === "start" ||
+																		position === "single"
+																			? plan.title.substring(0, 10) +
+																				(plan.title.length > 10 ? "..." : "")
+																			: ""}
+																	</div>
+																);
+															})}
+															{plansForDay.length > 2 && (
+																<div className="text-[10px] text-gray-400">
+																	+{plansForDay.length - 2}
+																</div>
+															)}
+														</div>
+													</div>
+												</div>
+											);
+										})}
+									</div>
+								</div>
+							);
+						})}
+					</div>
+				</TabsContent>
+
+				{/* Selected date details */}
+				{selectedDate && (
+					<div className="mt-6 border-t border-gray-700 pt-4">
+						<h3 className="font-medium mb-2">
+							{format(selectedDate, "MMMM d, yyyy")} -{" "}
+							{selectedDatePlans.length} plan
+							{selectedDatePlans.length !== 1 ? "s" : ""}
+						</h3>
+
+						{selectedDatePlans.length > 0 ? (
+							<div className="space-y-3">
+								{selectedDatePlans.map((plan) => {
+									const startDate = parseISO(plan.startDate);
+									const dueDate = parseISO(plan.dueDate);
+									const duration = differenceInDays(dueDate, startDate) + 1;
+
+									return (
+										<div
+											key={plan.id}
+											className="p-3 rounded-md"
+											style={{ backgroundColor: `${plan.color}10` }}
+										>
+											<div className="flex justify-between items-start">
+												<h4
+													className="font-medium"
+													style={{ color: plan.color }}
+												>
+													{plan.title}
+												</h4>
+												<span
+													className={`text-xs px-2 py-0.5 rounded ${
+														plan.priority === "High"
+															? "bg-red-500/20 text-red-400"
+															: plan.priority === "Medium"
+																? "bg-amber-500/20 text-amber-400"
+																: "bg-blue-500/20 text-blue-400"
+													}`}
+												>
+													{plan.priority}
+												</span>
+											</div>
+											<p className="text-sm text-gray-300 mt-1">
+												{plan.description}
+											</p>
+											<div className="flex justify-between mt-2 text-xs text-gray-400">
+												<span>
+													{format(startDate, "MMM d")} -{" "}
+													{format(dueDate, "MMM d, yyyy")}
+												</span>
+												<span>
+													{duration} day{duration !== 1 ? "s" : ""}
+												</span>
+											</div>
+											<div className="w-full bg-gray-700 rounded-full h-1.5 mt-2">
+												<div
+													className="rounded-full h-1.5"
+													style={{
+														width: `${plan.progress}%`,
+														backgroundColor: plan.color,
+													}}
+												/>
+											</div>
+											<div className="flex justify-between items-center mt-2">
+												<span
+													className="text-xs"
+													style={{
+														color: plan.completed ? "#10b981" : "#9ca3af",
+													}}
+												>
+													{plan.completed
+														? "Completed"
+														: `${plan.progress}% Complete`}
+												</span>
+												<span className="text-xs">{plan.category}</span>
+											</div>
+										</div>
+									);
+								})}
+							</div>
+						) : (
+							<p className="text-gray-400 text-sm">
+								No action plans for this date.
+							</p>
+						)}
+					</div>
+				)}
+			</CardContent>
+		</Card>
 	);
 }

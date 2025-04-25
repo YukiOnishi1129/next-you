@@ -1,4 +1,5 @@
 import { ActionPlanCard } from "@/features/actionPlans/components/ActionPlanCard";
+import type { ActionPlan } from "@/features/actionPlans/types";
 import { AnalysisCard } from "@/features/analysis/components/AnalysisCard";
 import { MindMapVisualization } from "@/features/analysis/components/MindMapVisualization";
 import { CategoryCard } from "@/features/categories/components/CategoryCard";
@@ -34,7 +35,7 @@ export default function DashboardPage() {
 		},
 	];
 
-	const recentActionPlans = [
+	const recentActionPlans: Array<ActionPlan> = [
 		{
 			id: "1",
 			title: "Complete Next.js Tutorial",
@@ -43,8 +44,37 @@ export default function DashboardPage() {
 			startDate: "2024-04-22",
 			dueDate: "2024-04-25",
 			category: "Programming",
+			categoryId: "cat1",
 			completed: false,
 			priority: "Medium",
+			color: "#3b82f6", // blue
+			tasks: [
+				{
+					id: "t1",
+					title: "Setup project",
+					completed: true,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t2",
+					title: "Learn routing",
+					completed: true,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t3",
+					title: "Understand data fetching",
+					completed: false,
+					dueDate: null,
+					notes: null,
+				},
+			],
+			progress: 30,
+			userId: "user1",
+			createdAt: "2024-04-20",
+			updatedAt: "2024-04-21",
 		},
 		{
 			id: "2",
@@ -54,8 +84,37 @@ export default function DashboardPage() {
 			startDate: "2024-04-15",
 			dueDate: "2024-04-20",
 			category: "Health",
+			categoryId: "cat2",
 			completed: true,
 			priority: "High",
+			color: "#22c55e", // green
+			tasks: [
+				{
+					id: "t4",
+					title: "Day 1 - 20 min walk",
+					completed: true,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t5",
+					title: "Day 2 - 20 min walk",
+					completed: true,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t6",
+					title: "Day 3 - 20 min walk",
+					completed: true,
+					dueDate: null,
+					notes: null,
+				},
+			],
+			progress: 100,
+			userId: "user1",
+			createdAt: "2024-04-14",
+			updatedAt: "2024-04-20",
 		},
 		{
 			id: "3",
@@ -65,8 +124,37 @@ export default function DashboardPage() {
 			startDate: "2024-04-23",
 			dueDate: "2024-04-22",
 			category: "Productivity",
+			categoryId: "cat3",
 			completed: false,
 			priority: "Low",
+			color: "#a855f7", // purple
+			tasks: [
+				{
+					id: "t7",
+					title: "Research technique",
+					completed: false,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t8",
+					title: "Find timer app",
+					completed: false,
+					dueDate: null,
+					notes: null,
+				},
+				{
+					id: "t9",
+					title: "Test for one day",
+					completed: false,
+					dueDate: null,
+					notes: null,
+				},
+			],
+			progress: 0,
+			userId: "user1",
+			createdAt: "2024-04-22",
+			updatedAt: "2024-04-22",
 		},
 	];
 

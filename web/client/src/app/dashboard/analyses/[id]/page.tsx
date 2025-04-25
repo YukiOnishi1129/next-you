@@ -206,9 +206,9 @@ export default async function AnalysisDetailPage({ params }: PageProps) {
 						title="Related Action Plans"
 						description="Action plans suggested based on this analysis"
 					>
-						{analysis.relatedActionPlans.map((plan) => (
+						{/* {analysis.relatedActionPlans.map((plan) => (
 							<ActionPlanCard key={plan.id} actionPlan={plan} />
-						))}
+						))} */}
 						<div className="col-span-full md:col-span-1 flex items-center justify-center border border-dashed rounded-lg p-8">
 							<Button
 								variant="outline"

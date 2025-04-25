@@ -9,8 +9,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/shared/components/ui/select";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface FilterOption {
 	name: string;
@@ -20,10 +21,28 @@ interface FilterOption {
 interface ObjectFilterProps {
 	filters?: FilterOption[];
 	sortOptions: FilterOption[];
+	activeFilter?: string;
+	onFilterChange?: (value: string) => void;
+	onSortChange?: (value: string) => void;
+	onSearch?: (value: string) => void;
 }
 
-export function ObjectFilter({ filters, sortOptions }: ObjectFilterProps) {
-	const [activeFilter, setActiveFilter] = useState("all");
+export function ObjectFilter({
+	filters,
+	sortOptions,
+	activeFilter = "all",
+	onFilterChange,
+	onSortChange,
+	onSearch,
+}: ObjectFilterProps) {
+	const [searchTerm, setSearchTerm] = useState("");
+	const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+	useEffect(() => {
+		if (onSearch) {
+			onSearch(debouncedSearchTerm);
+		}
+	}, [debouncedSearchTerm, onSearch]);
 
 	return (
 		<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
@@ -34,7 +53,7 @@ export function ObjectFilter({ filters, sortOptions }: ObjectFilterProps) {
 							key={filter.value}
 							variant={activeFilter === filter.value ? "default" : "outline"}
 							size="sm"
-							onClick={() => setActiveFilter(filter.value)}
+							onClick={() => onFilterChange?.(filter.value)}
 							className={
 								activeFilter === filter.value
 									? "bg-rose-500 text-white hover:bg-rose-600"
@@ -53,22 +72,25 @@ export function ObjectFilter({ filters, sortOptions }: ObjectFilterProps) {
 						type="search"
 						placeholder="検索..."
 						className="w-[150px] sm:w-[200px] pl-8"
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 				</div>
-				{sortOptions.length > 0 && (
-					<Select defaultValue={sortOptions[0].value}>
-						<SelectTrigger className="w-[150px]">
-							<SelectValue placeholder="並び替え" />
-						</SelectTrigger>
-						<SelectContent>
-							{sortOptions.map((option) => (
-								<SelectItem key={option.value} value={option.value}>
-									{option.name}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				)}
+				<Select
+					defaultValue={sortOptions[0].value}
+					onValueChange={onSortChange}
+				>
+					<SelectTrigger className="w-[150px]">
+						<SelectValue placeholder="並び替え" />
+					</SelectTrigger>
+					<SelectContent>
+						{sortOptions.map((option) => (
+							<SelectItem key={option.value} value={option.value}>
+								{option.name}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
 			</div>
 		</div>
 	);

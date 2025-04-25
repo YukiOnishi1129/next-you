@@ -1,100 +1,108 @@
 "use client";
 
-import { ActionPlanCalendar } from "@/features/actionPlans/components/ActionPlanCalendar";
-import { ActionPlanCard } from "@/features/actionPlans/components/ActionPlanCard";
-import { ActionPlanList } from "@/features/actionPlans/components/ActionPlanList";
-import { ActionPlanProgress } from "@/features/actionPlans/components/ActionPlanProgress";
-import { ObjectFilter } from "@/shared/components/common/ObjectFilter";
 import { ObjectGrid } from "@/shared/components/common/ObjectGrid";
 import { PageHeader } from "@/shared/components/layout/header/PageHeader";
 import { DashboardShell } from "@/shared/components/layout/shell/DashboardShell";
 import { Button } from "@/shared/components/ui/button";
+
+import { ActionPlanCalendar } from "@/features/actionPlans/components/ActionPlanCalendar";
+import { ActionPlanList } from "@/features/actionPlans/components/ActionPlanList";
+import { ActionPlanProgress } from "@/features/actionPlans/components/ActionPlanProgress";
+import { mockActionPlans } from "@/features/actionPlans/data/mockData";
+import { Input } from "@/shared/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/shared/components/ui/select";
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
 } from "@/shared/components/ui/tabs";
-import { Grid, List, Plus, Search } from "lucide-react";
+import { useDebounce } from "@/shared/hooks/useDebounce";
+import { Grid, List, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function ActionPlansPage() {
-	// Sample data with start dates added
-	const actionPlans = [
-		{
-			id: "1",
-			title: "Complete Next.js Tutorial",
-			description:
-				"Work through the official documentation tutorial to understand the basic usage",
-			startDate: "2025-04-22",
-			dueDate: "2025-04-25",
-			category: "Programming",
-			completed: false,
-			priority: "Medium",
-			color: "#3b82f6", // blue
-		},
-		{
-			id: "2",
-			title: "Morning Walking Routine",
-			description:
-				"Develop a habit of walking for 20 minutes every morning and continue for a week",
-			startDate: "2025-04-15",
-			dueDate: "2025-04-22",
-			category: "Health",
-			completed: true,
-			priority: "High",
-			color: "#22c55e", // green
-		},
-		{
-			id: "3",
-			title: "Pomodoro Technique",
-			description:
-				"Implement 25-minute work, 5-minute break cycles four times a day to improve focus",
-			startDate: "2025-04-23",
-			dueDate: "2025-04-24",
-			category: "Productivity",
-			completed: false,
-			priority: "Low",
-			color: "#a855f7", // purple
-		},
-		{
-			id: "4",
-			title: "TypeScript Learning",
-			description:
-				"Read the official documentation and understand the basic concepts of the type system",
-			startDate: "2025-04-25",
-			dueDate: "2025-04-30",
-			category: "Programming",
-			completed: false,
-			priority: "Medium",
-			color: "#3b82f6", // blue
-		},
-		{
-			id: "5",
-			title: "Disney Trip Planning",
-			description: "Plan the upcoming Disney trip with family",
-			startDate: "2025-04-16",
-			dueDate: "2025-04-18",
-			category: "Personal",
-			completed: false,
-			priority: "High",
-			color: "#14b8a6", // teal
-		},
-		{
-			id: "6",
-			title: "Live Streaming",
-			description: "Prepare and conduct live streaming session",
-			startDate: "2025-04-20",
-			dueDate: "2025-04-20",
-			category: "Career",
-			completed: true,
-			priority: "Medium",
-			color: "#ec4899", // pink
-		},
-	];
-
 	const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+	const [activeTab, setActiveTab] = useState("list");
+	const [searchTerm, setSearchTerm] = useState("");
+	const [statusFilter, setStatusFilter] = useState("all");
+	const [sortOption, setSortOption] = useState("due-date-asc");
+	const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+	// Apply search and filtering
+	const filteredActionPlans = mockActionPlans.filter((plan) => {
+		// Search filter
+		if (
+			debouncedSearchTerm &&
+			!plan.title.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) &&
+			!plan.description
+				.toLowerCase()
+				.includes(debouncedSearchTerm.toLowerCase())
+		) {
+			return false;
+		}
+
+		// Status filter
+		if (statusFilter === "completed" && !plan.completed) return false;
+		if (statusFilter === "incomplete" && plan.completed) return false;
+		if (
+			statusFilter === "overdue" &&
+			(plan.completed || new Date(plan.dueDate) >= new Date())
+		)
+			return false;
+
+		return true;
+	});
+
+	// Apply sorting
+	const sortedActionPlans = [...filteredActionPlans].sort((a, b) => {
+		switch (sortOption) {
+			case "due-date-asc":
+				return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime();
+			case "due-date-desc":
+				return new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime();
+			case "newest":
+				return (
+					new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				);
+			case "oldest":
+				return (
+					new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+				);
+			case "category":
+				return a.category.localeCompare(b.category);
+			case "priority": {
+				const priorityOrder = { High: 0, Medium: 1, Low: 2 };
+				return priorityOrder[a.priority] - priorityOrder[b.priority];
+			}
+			default:
+				return 0;
+		}
+	});
+
+	const handleToggleCompletion = (id: string) => {
+		// In a real app, this would call an API
+		toast.success("SUCCESS", {
+			description: "Action plan status has been updated.",
+		});
+	};
+
+	const handleDeletePlan = (id: string) => {
+		if (confirm("Are you sure you want to delete this action plan?")) {
+			// In a real app, this would call an API
+			toast.success("SUCCESS", {
+				description: "Action plan has been deleted.",
+			});
+		}
+	};
 
 	return (
 		<DashboardShell>
@@ -111,7 +119,11 @@ export default function ActionPlansPage() {
 				}
 			/>
 
-			<Tabs defaultValue="list" className="space-y-4">
+			<Tabs
+				value={activeTab}
+				onValueChange={setActiveTab}
+				className="space-y-4"
+			>
 				<TabsList className="bg-gray-900">
 					<TabsTrigger value="list" className="data-[state=active]:bg-gray-800">
 						List View
@@ -131,40 +143,63 @@ export default function ActionPlansPage() {
 				</TabsList>
 
 				<TabsContent value="list">
-					<div className="flex items-center justify-between mb-4">
-						<ObjectFilter
-							filters={[
-								{ name: "All", value: "all" },
-								{ name: "Pending", value: "incomplete" },
-								{ name: "Completed", value: "completed" },
-								{ name: "Overdue", value: "overdue" },
-							]}
-							sortOptions={[
-								{ name: "Due Date", value: "due-date-asc" },
-								{ name: "Newest First", value: "newest" },
-								{ name: "By Category", value: "category" },
-								{ name: "By Priority", value: "priority" },
-							]}
-						/>
-						<div className="flex space-x-1 bg-gray-800 p-1 rounded-md">
-							<Button
-								variant="ghost"
-								size="icon"
-								className={viewMode === "grid" ? "bg-gray-700" : ""}
-								onClick={() => setViewMode("grid")}
-							>
-								<Grid className="h-4 w-4" />
-								<span className="sr-only">Grid view</span>
-							</Button>
-							<Button
-								variant="ghost"
-								size="icon"
-								className={viewMode === "list" ? "bg-gray-700" : ""}
-								onClick={() => setViewMode("list")}
-							>
-								<List className="h-4 w-4" />
-								<span className="sr-only">List view</span>
-							</Button>
+					<div className="flex flex-col sm:flex-row gap-4 mb-4">
+						<div className="flex-1">
+							<Input
+								placeholder="Search action plans..."
+								value={searchTerm}
+								onChange={(e) => setSearchTerm(e.target.value)}
+								className="w-full"
+							/>
+						</div>
+
+						<div className="flex gap-2">
+							<Select value={statusFilter} onValueChange={setStatusFilter}>
+								<SelectTrigger className="w-[140px]">
+									<SelectValue placeholder="Status" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="incomplete">Pending</SelectItem>
+									<SelectItem value="completed">Completed</SelectItem>
+									<SelectItem value="overdue">Overdue</SelectItem>
+								</SelectContent>
+							</Select>
+
+							<Select value={sortOption} onValueChange={setSortOption}>
+								<SelectTrigger className="w-[140px]">
+									<SelectValue placeholder="Sort by" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="due-date-asc">Due Date (Asc)</SelectItem>
+									<SelectItem value="due-date-desc">Due Date (Desc)</SelectItem>
+									<SelectItem value="newest">Newest First</SelectItem>
+									<SelectItem value="oldest">Oldest First</SelectItem>
+									<SelectItem value="category">By Category</SelectItem>
+									<SelectItem value="priority">By Priority</SelectItem>
+								</SelectContent>
+							</Select>
+
+							<div className="flex space-x-1 bg-gray-800 p-1 rounded-md">
+								<Button
+									variant="ghost"
+									size="icon"
+									className={viewMode === "grid" ? "bg-gray-700" : ""}
+									onClick={() => setViewMode("grid")}
+								>
+									<Grid className="h-4 w-4" />
+									<span className="sr-only">Grid view</span>
+								</Button>
+								<Button
+									variant="ghost"
+									size="icon"
+									className={viewMode === "list" ? "bg-gray-700" : ""}
+									onClick={() => setViewMode("list")}
+								>
+									<List className="h-4 w-4" />
+									<span className="sr-only">List view</span>
+								</Button>
+							</div>
 						</div>
 					</div>
 
@@ -182,21 +217,81 @@ export default function ActionPlansPage() {
 									</Link>
 								</Button>
 							</div>
-							{actionPlans.map((plan) => (
-								<ActionPlanCard key={plan.id} actionPlan={plan} />
+							{sortedActionPlans.map((plan) => (
+								<div
+									key={plan.id}
+									className="bg-gray-800 rounded-lg p-4 border border-gray-700"
+								>
+									<div className="flex justify-between items-start mb-2">
+										<h3 className="font-medium text-lg">{plan.title}</h3>
+										<div
+											className={`px-2 py-1 rounded text-xs ${
+												plan.priority === "High"
+													? "bg-red-500/20 text-red-400"
+													: plan.priority === "Medium"
+														? "bg-amber-500/20 text-amber-400"
+														: "bg-blue-500/20 text-blue-400"
+											}`}
+										>
+											{plan.priority}
+										</div>
+									</div>
+									<p className="text-gray-400 text-sm mb-3 line-clamp-2">
+										{plan.description}
+									</p>
+									<div className="flex justify-between items-center text-xs text-gray-400 mb-3">
+										<span>{plan.category}</span>
+										<span>
+											Due: {new Date(plan.dueDate).toLocaleDateString()}
+										</span>
+									</div>
+									<div className="w-full bg-gray-700 rounded-full h-1.5 mb-3">
+										<div
+											className="bg-rose-500 h-1.5 rounded-full"
+											style={{ width: `${plan.progress}%` }}
+										/>
+									</div>
+									<div className="flex justify-between items-center">
+										<span
+											className={`text-xs ${plan.completed ? "text-green-400" : "text-gray-400"}`}
+										>
+											{plan.completed
+												? "Completed"
+												: `${plan.progress}% Complete`}
+										</span>
+										<div className="flex gap-2">
+											<Button
+												variant="ghost"
+												size="sm"
+												onClick={() => handleToggleCompletion(plan.id)}
+											>
+												{plan.completed ? "Reopen" : "Complete"}
+											</Button>
+											<Button variant="ghost" size="sm" asChild>
+												<Link href={`/dashboard/action-plans/${plan.id}`}>
+													View
+												</Link>
+											</Button>
+										</div>
+									</div>
+								</div>
 							))}
 						</ObjectGrid>
 					) : (
-						<ActionPlanList actionPlans={actionPlans} />
+						<ActionPlanList
+							actionPlans={sortedActionPlans}
+							onToggleCompletion={handleToggleCompletion}
+							onDelete={handleDeletePlan}
+						/>
 					)}
 				</TabsContent>
 
 				<TabsContent value="calendar">
-					<ActionPlanCalendar actionPlans={actionPlans} />
+					<ActionPlanCalendar actionPlans={sortedActionPlans} />
 				</TabsContent>
 
 				<TabsContent value="progress">
-					<ActionPlanProgress actionPlans={actionPlans} />
+					<ActionPlanProgress actionPlans={sortedActionPlans} />
 				</TabsContent>
 			</Tabs>
 		</DashboardShell>

@@ -180,9 +180,9 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 				</TabsList>
 				<TabsContent value="all" className="space-y-4">
 					<ObjectGrid>
-						{category.actionPlans.map((plan) => (
+						{/* {category.actionPlans.map((plan) => (
 							<ActionPlanCard key={plan.id} actionPlan={plan} />
-						))}
+						))} */}
 						<div className="col-span-full md:col-span-1 flex items-center justify-center border border-dashed rounded-lg p-8">
 							<Button
 								variant="outline"
@@ -201,20 +201,20 @@ export default async function CategoryDetailPage({ params }: PageProps) {
 				</TabsContent>
 				<TabsContent value="incomplete" className="space-y-4">
 					<ObjectGrid>
-						{category.actionPlans
+						{/* {category.actionPlans
 							.filter((plan) => !plan.completed)
 							.map((plan) => (
 								<ActionPlanCard key={plan.id} actionPlan={plan} />
-							))}
+							))} */}
 					</ObjectGrid>
 				</TabsContent>
 				<TabsContent value="completed" className="space-y-4">
 					<ObjectGrid>
-						{category.actionPlans
+						{/* {category.actionPlans
 							.filter((plan) => plan.completed)
 							.map((plan) => (
 								<ActionPlanCard key={plan.id} actionPlan={plan} />
-							))}
+							))} */}
 					</ObjectGrid>
 				</TabsContent>
 			</Tabs>
