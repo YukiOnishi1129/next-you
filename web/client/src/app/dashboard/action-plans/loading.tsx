@@ -6,7 +6,9 @@ import { PulseLoader } from "react-spinners";
 
 export default function Loading() {
 	const SKELETON_COUNT = 6;
-	const skeletonIds = Array.from({ length: SKELETON_COUNT }, () => crypto.randomUUID());
+	const skeletonIds = Array.from({ length: SKELETON_COUNT }, () =>
+		crypto.randomUUID(),
+	);
 
 	return (
 		<div className="container mx-auto p-6 space-y-8">
