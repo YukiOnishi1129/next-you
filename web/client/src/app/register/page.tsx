@@ -1,5 +1,6 @@
 "use client";
 
+import { PlainPageShell } from "@/shared/components/layout/shell/PlainPageShell/PlainPageShell";
 import { Button } from "@/shared/components/ui/button";
 import {
 	Card,
@@ -90,141 +91,135 @@ export default function RegisterPage() {
 	};
 
 	return (
-		<div className="min-h-screen flex flex-col">
-			<header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-				<div className="container flex h-16 items-center">
-					<Link href="/" className="flex items-center space-x-2">
-						<Brain className="h-6 w-6 text-rose-500" />
-						<span className="font-bold">NextYou</span>
-					</Link>
+		<PlainPageShell>
+			<div className="min-h-screen flex flex-col">
+				<div className="flex-1 flex items-center justify-center p-6">
+					<Card className="w-full max-w-md">
+						<CardHeader className="space-y-1">
+							<CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
+							<CardDescription>
+								Enter your information to create an account
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<Form {...form}>
+								<form
+									onSubmit={form.handleSubmit(onSubmit)}
+									className="space-y-4"
+								>
+									<div className="grid grid-cols-2 gap-4">
+										<FormField
+											control={form.control}
+											name="firstName"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>First Name</FormLabel>
+													<FormControl>
+														<Input placeholder="John" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="lastName"
+											render={({ field }) => (
+												<FormItem>
+													<FormLabel>Last Name</FormLabel>
+													<FormControl>
+														<Input placeholder="Doe" {...field} />
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
+									<FormField
+										control={form.control}
+										name="email"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Email</FormLabel>
+												<FormControl>
+													<Input placeholder="your@email.com" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="password"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Password</FormLabel>
+												<FormControl>
+													<Input type="password" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="confirmPassword"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel>Confirm Password</FormLabel>
+												<FormControl>
+													<Input type="password" {...field} />
+												</FormControl>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+									<FormField
+										control={form.control}
+										name="terms"
+										render={({ field }) => (
+											<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
+												<FormControl>
+													<Checkbox
+														checked={field.value}
+														onCheckedChange={field.onChange}
+													/>
+												</FormControl>
+												<div className="space-y-1 leading-none">
+													<FormLabel>
+														I agree to the{" "}
+														<Link
+															href="/terms"
+															className="text-rose-500 hover:underline"
+														>
+															Terms of Service
+														</Link>
+													</FormLabel>
+													<FormMessage />
+												</div>
+											</FormItem>
+										)}
+									/>
+									<Button type="submit" className="w-full" disabled={isLoading}>
+										{isLoading ? "Creating account..." : "Sign Up"}
+									</Button>
+								</form>
+							</Form>
+						</CardContent>
+						<CardFooter className="flex justify-center">
+							<div className="text-center text-sm">
+								Already have an account?
+								<Link
+									href="/login"
+									className="text-rose-500 hover:underline ml-1"
+								>
+									Login
+								</Link>
+							</div>
+						</CardFooter>
+					</Card>
 				</div>
-			</header>
-			<main className="flex-1 flex items-center justify-center p-6">
-				<Card className="w-full max-w-md">
-					<CardHeader className="space-y-1">
-						<CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
-						<CardDescription>
-							Enter your information to create an account
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Form {...form}>
-							<form
-								onSubmit={form.handleSubmit(onSubmit)}
-								className="space-y-4"
-							>
-								<div className="grid grid-cols-2 gap-4">
-									<FormField
-										control={form.control}
-										name="firstName"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>First Name</FormLabel>
-												<FormControl>
-													<Input placeholder="John" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="lastName"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Last Name</FormLabel>
-												<FormControl>
-													<Input placeholder="Doe" {...field} />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-								</div>
-								<FormField
-									control={form.control}
-									name="email"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Email</FormLabel>
-											<FormControl>
-												<Input placeholder="your@email.com" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="password"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Password</FormLabel>
-											<FormControl>
-												<Input type="password" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="confirmPassword"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Confirm Password</FormLabel>
-											<FormControl>
-												<Input type="password" {...field} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-								<FormField
-									control={form.control}
-									name="terms"
-									render={({ field }) => (
-										<FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md">
-											<FormControl>
-												<Checkbox
-													checked={field.value}
-													onCheckedChange={field.onChange}
-												/>
-											</FormControl>
-											<div className="space-y-1 leading-none">
-												<FormLabel>
-													I agree to the{" "}
-													<Link
-														href="/terms"
-														className="text-rose-500 hover:underline"
-													>
-														Terms of Service
-													</Link>
-												</FormLabel>
-												<FormMessage />
-											</div>
-										</FormItem>
-									)}
-								/>
-								<Button type="submit" className="w-full" disabled={isLoading}>
-									{isLoading ? "Creating account..." : "Sign Up"}
-								</Button>
-							</form>
-						</Form>
-					</CardContent>
-					<CardFooter className="flex justify-center">
-						<div className="text-center text-sm">
-							Already have an account?
-							<Link
-								href="/login"
-								className="text-rose-500 hover:underline ml-1"
-							>
-								Login
-							</Link>
-						</div>
-					</CardFooter>
-				</Card>
-			</main>
-		</div>
+			</div>
+		</PlainPageShell>
 	);
 }
