@@ -1,5 +1,6 @@
 "use client";
 
+import type { ActionPlan } from "@/features/actionPlans/types/actionPlan";
 import {
 	Card,
 	CardContent,
@@ -8,17 +9,6 @@ import {
 	CardTitle,
 } from "@/shared/components/ui/card";
 import { Progress } from "@/shared/components/ui/progress";
-
-interface ActionPlan {
-	id: string;
-	title: string;
-	description: string;
-	startDate: string;
-	dueDate: string;
-	category: string;
-	completed: boolean;
-	priority: string;
-}
 
 interface ActionPlanProgressProps {
 	actionPlans: ActionPlan[];
@@ -155,6 +145,9 @@ export function ActionPlanProgress({ actionPlans }: ActionPlanProgressProps) {
 												className="h-4 w-4 rounded-full"
 												style={{ backgroundColor: data.color }}
 											/>
+											<span className="font-medium text-white">
+												Priority: {priority}
+											</span>
 										</div>
 										<span className="text-sm text-gray-400">
 											{data.completed}/{data.total} Completed ({completionRate}
