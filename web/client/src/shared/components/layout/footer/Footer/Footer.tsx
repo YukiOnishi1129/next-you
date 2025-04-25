@@ -126,7 +126,7 @@ export function Footer() {
 										</li>
 										<li>
 											<Link
-												href="/action-plan"
+												href="/action-plans"
 												className="text-muted-foreground hover:text-foreground"
 											>
 												Action Plans

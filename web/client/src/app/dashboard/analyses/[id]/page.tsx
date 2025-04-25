@@ -20,12 +20,15 @@ import {
 import { ArrowLeft, ArrowRight, Download, Plus, Share2 } from "lucide-react";
 import Link from "next/link";
 
-export default function AnalysisDetailPage({
-	params,
-}: { params: { id: string } }) {
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function AnalysisDetailPage({ params }: PageProps) {
+	const { id } = await params;
 	// Update the sample data to English
 	const analysis = {
-		id: params.id,
+		id,
 		date: "April 18, 2024",
 		summary:
 			"Conversations focused on programming learning and health management.",

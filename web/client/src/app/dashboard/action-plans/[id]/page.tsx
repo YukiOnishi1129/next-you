@@ -13,12 +13,15 @@ import { Textarea } from "@/shared/components/ui/textarea";
 import { ArrowLeft, Calendar, Clock, Edit, Trash2 } from "lucide-react";
 import Link from "next/link";
 
-export default function ActionPlanDetailPage({
-	params,
-}: { params: { id: string } }) {
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function ActionPlanDetailPage({ params }: PageProps) {
+	const { id } = await params;
 	// Update the sample data to English
 	const actionPlan = {
-		id: params.id,
+		id,
 		title: "Complete Next.js Tutorial",
 		description:
 			"Work through the official documentation tutorial to understand the basic usage. Focus particularly on the App Router concept and how to use server components. Also deepen understanding of data fetching methods and routing mechanisms.",
