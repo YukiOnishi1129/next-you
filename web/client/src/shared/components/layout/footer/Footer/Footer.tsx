@@ -110,14 +110,6 @@ export function Footer() {
 									<>
 										<li>
 											<Link
-												href="/"
-												className="text-muted-foreground hover:text-foreground"
-											>
-												Home
-											</Link>
-										</li>
-										<li>
-											<Link
 												href="/dashboard"
 												className="text-muted-foreground hover:text-foreground"
 											>
