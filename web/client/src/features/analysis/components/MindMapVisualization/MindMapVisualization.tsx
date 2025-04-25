@@ -60,11 +60,9 @@ export function MindMapVisualization() {
 		drawMindMap(ctx, rootNode, canvas.width / 2, canvas.height / 2, 0);
 
 		// Mind map drawing function
-
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 		function drawMindMap(
 			ctx: CanvasRenderingContext2D,
-			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			// biome-ignore lint/suspicious/noExplicitAny: Node structure varies based on mind map content
 			node: any,
 			x: number,
 			y: number,
@@ -89,7 +87,7 @@ export function MindMapVisualization() {
 			if (node.children && node.children.length > 0) {
 				const angleStep = (Math.PI * 2) / node.children.length;
 
-				// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+				// biome-ignore lint/suspicious/noExplicitAny: Child nodes can have various structures
 				node.children.forEach((child: any, i: number) => {
 					const childAngle = angle + i * angleStep;
 					const childX = x + Math.cos(childAngle) * radius;
