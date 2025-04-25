@@ -236,7 +236,10 @@ export default function Home() {
 										"Keep your action plans organized by categories that matter to you, from career to health.",
 								},
 							].map((benefit, index) => (
-								<div key={`${benefit.title}-${index}`} className="flex items-start space-x-4">
+								<div
+									key={`${benefit.title}-${index}`}
+									className="flex items-start space-x-4"
+								>
 									<div className="mt-1 rounded-full bg-rose-100 p-1 dark:bg-rose-900">
 										<Check className="h-5 w-5 text-rose-500" />
 									</div>
