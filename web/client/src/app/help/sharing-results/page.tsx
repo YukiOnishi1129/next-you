@@ -12,7 +12,7 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/shared/components/ui/tabs";
-import { Share2, Lock, Users, Globe, FileText, Mail, Copy } from "lucide-react";
+import { Copy, FileText, Globe, Lock, Mail, Share2, Users } from "lucide-react";
 
 export default function SharingResultsPage() {
 	return (
