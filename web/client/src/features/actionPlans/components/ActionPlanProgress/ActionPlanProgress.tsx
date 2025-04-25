@@ -1,6 +1,6 @@
 "use client";
 
-import type { ActionPlan } from "@/features/actionPlans/types/actionPlan";
+import type { ActionPlan } from "@/features/actionPlans/types";
 import {
 	Card,
 	CardContent,
