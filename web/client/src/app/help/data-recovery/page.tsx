@@ -21,7 +21,7 @@ export default function DataRecoveryPage() {
 				<div className="space-y-8">
 					<section>
 						<h2 className="text-2xl font-semibold mb-4">
-							Understanding Data Recovery Options
+							Understanding Data Recovery Options 
 						</h2>
 						<p className="mb-4">
 							Next You provides several ways to recover your data in case of
